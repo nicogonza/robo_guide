@@ -1,0 +1,17 @@
+<package>
+  <description brief="final">
+
+     final
+
+  </description>
+  <author>Nico</author>
+  <license>BSD</license>
+  <review status="unreviewed" notes=""/>
+  <url>http://ros.org/wiki/final</url>
+  <depend package="rospy"/>
+  <depend package="std_msgs"/>
+  <depend package="nav_msgs"/>
+
+</package>
+
+
