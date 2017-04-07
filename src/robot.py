@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 from geometry_msgs.msg import Twist
 from geometry_msgs.msg import Point
-from nav_msgs.msg import Odometry,Path
+from nav_msgs.msg import Odometry,Path,OccupancyGrid
 from math import atan
 from math import asin
 from std_msgs.msg import Empty
@@ -10,16 +10,10 @@ import rospy
 import time
 import math
 
-def callback(msg):
+def map_callback(msg):
 		global robot
+		global map = msg.data
 
-		global flag
-		print flag
-		points = []
-		for i in msg.poses:
-			points.append([i.pose.position.x,i.pose.position.y])
-
-		robot.travel(points)
 	
 class Robot(object):
 	def __init__(self):
@@ -176,15 +170,15 @@ def odom_callback(msg):
 
 if __name__ == '__main__':
 	try:
+		print "in main"
 		robot = Robot()
 		flag = 0
-		rospy.init_node('turtle_bot_node')
-		rospy.Subscriber('odom',Odometry,odom_callback)
-		rospy.Rate(1).sleep()
-		rospy.Subscriber('pathTopic', Path, callback)
-		r=rospy.Publisher('/mobile_base/commands/reset_odometry',Empty,queue_size=1)
-		msg = Empty()		
-		r.publish(msg)
+		print "init node"
+		rospy.init_node('bot_node')
+		#rospy.Subscriber('odom',Odometry,odom_callback)
+		print "sub to map"
+		rospy.Subscriber("/map", OccupancyGrid, map_callback)
+		print "spin"
 		rospy.spin()
 		
 	except rospy.ROSInterruptException:
