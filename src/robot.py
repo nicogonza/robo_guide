@@ -12,7 +12,20 @@ import math
 
 def map_callback(msg):
 		global robot
-		global map = msg.data
+
+		f=open('map.txt', 'w')
+		c=0
+		for h in msg.data:
+			if c%704==0 and c !=0:
+				value=str(h)+('\n')
+				f.write(value)
+			else:
+				value=str(h)+','
+				f.write(value)
+			c=c+1
+
+
+
 
 	
 class Robot(object):
@@ -183,3 +196,4 @@ if __name__ == '__main__':
 		
 	except rospy.ROSInterruptException:
 		pass
+
