@@ -20,7 +20,7 @@ def map_callback(msg):
 				value=str(h)+('\n')
 				f.write(value)
 			else:
-				value=str(h)+','
+				value=str(h)+' '
 				f.write(value)
 			c=c+1
 

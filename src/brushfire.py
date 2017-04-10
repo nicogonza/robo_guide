@@ -1,27 +1,32 @@
+#!/usr/bin/env python
 import csv
 import numpy as np
 import copy
 import math
 grid =[]
-
-with open('input.txt') as file:
-    reader= csv.reader(file,delimiter=' ')
-    for line in reader:
-        tmp = []
-        for i in line:
-                if i!="\n":
-                    tmp.append(i)
-        grid.append(tmp)
 columns =0
+with open('map.txt') as file:
+    reader= csv.reader(file, delimiter= ' ')
+    for line in reader:
+	tmp = []
+	for i in line:
+		
+		if i!="\n" and i!="":
+	    		tmp.append(int(i))
+	grid.append(tmp)
+
 newgrid=[]
 for line in grid:
-    for i in line:
-        columns = len(i)
-        newgrid.append(map(int, i))
-grid = newgrid
+
+		
+	columns = len(line)
+	
+print columns
+
 repulsive = copy.deepcopy(grid)
 attgrid = copy.deepcopy(grid)
 rows = len(grid)
+        
 #
 # grid = newgrid
 # for row in range(rows+1):
@@ -252,7 +257,7 @@ print(np.matrix(calcAttractive(attgrid,[userGoalX,userGoalY])))
 getgrid= calcAttractive(attgrid,[userGoalX,userGoalY])
 for r in range(rows):
     for c in range(columns):
-        if getgrid[r][c] == 1:
+        if getgrid[r][c] == 100:
             print str((r, c)) + "repulsive direction: obstacle"
         else:
             print str((r,c)) + "attractive direction: "+str(getgrid[r][c])+" degrees"
