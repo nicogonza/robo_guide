@@ -1,4 +1,6 @@
-#Implement Localization here
+#Implement localization using the AMCL package
+
+#publisher
 def pub_amcl:
 
     init_pose.pose.pose.position.x = -23.4
@@ -17,11 +19,12 @@ def pub_amcl:
 
     self.publisher.publish(init_pose)
 
+#subscriber
 def sub_amcl:
 
     rospy.Subscriber("/amcl_pose",PoseWithCovarianceStammed,callback_pose)
 
-
+#callback function
 def callback_pose(current_pose):
 
     x = current_pose.pose.pose.position.x
