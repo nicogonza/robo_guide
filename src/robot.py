@@ -9,10 +9,21 @@ from tf.transformations import euler_from_quaternion
 import rospy
 import time
 import math
+import csv
 
 def map_callback(msg):
 		global robot
-		global map = msg.data
+
+		f=open('map.txt', 'w')
+		c=0
+		for h in msg.data:
+			if c%704:
+				f.write('\n')
+			f.write(h ,',')
+			c=c+1
+
+
+
 
 	
 class Robot(object):
