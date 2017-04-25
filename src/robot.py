@@ -17,9 +17,18 @@ def map_callback(msg):
 		f=open('map.txt', 'w')
 		c=0
 		for h in msg.data:
+<<<<<<< HEAD
 			if c%704:
 				f.write('\n')
 			f.write(h ,',')
+=======
+			if c%704==0 and c !=0:
+				value=str(h)+('\n')
+				f.write(value)
+			else:
+				value=str(h)+' '
+				f.write(value)
+>>>>>>> 5645a0e98ee737b2de032cdc445a9e922d276d20
 			c=c+1
 
 
@@ -194,3 +203,4 @@ if __name__ == '__main__':
 		
 	except rospy.ROSInterruptException:
 		pass
+

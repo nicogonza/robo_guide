@@ -4,6 +4,7 @@ import numpy as np
 import copy
 import math
 
+
 grid = []
 columns = 0
 with open('map.txt') as file:
@@ -21,11 +22,36 @@ for line in grid:
 
 print(columns)
 
+grid =[]
+columns =0
+with open('map.txt') as file:
+    reader= csv.reader(file, delimiter= ' ')
+    for line in reader:
+	tmp = []
+	for i in line:
+		
+		if i!="\n" and i!="":
+	    		tmp.append(int(i))
+	grid.append(tmp)
+
+newgrid=[]
+for line in grid:
+
+		
+	columns = len(line)
+	
+print columns
+
+
 repulsive = copy.deepcopy(grid)
 attgrid = copy.deepcopy(grid)
 resultgrid = copy.deepcopy(grid)
 rows = len(grid)
+<<<<<<< HEAD
 
+
+
+        
 
 #
 # grid = newgrid
@@ -244,6 +270,12 @@ getgrid = calcAttractive(attgrid, [userGoalX, userGoalY])
 for r in range(rows):
     for c in range(columns):
         if getgrid[r][c] == 100:
+
             print(str((r, c)) + "repulsive direction: obstacle")
         else:
             print(str((r, c)) + "attractive direction: " + str(getgrid[r][c]) + " degrees")
+=======
+            print str((r, c)) + "repulsive direction: obstacle"
+        else:
+            print str((r,c)) + "attractive direction: "+str(getgrid[r][c])+" degrees"
+
