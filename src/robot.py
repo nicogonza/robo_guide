@@ -10,29 +10,36 @@ import rospy
 import time
 import math
 import csv
+from astar import AStar
+from astar import Cell
 
 def map_callback(msg):
+
+		start = [0,0]
+		goal = [5.0]
 		global robot
-
-		f=open('map.txt', 'w')
-		c=0
-		for h in msg.data:
-<<<<<<< HEAD
-			if c%704:
-				f.write('\n')
-			f.write(h ,',')
-=======
-			if c%704==0 and c !=0:
-				value=str(h)+('\n')
-				f.write(value)
-			else:
-				value=str(h)+' '
-				f.write(value)
->>>>>>> 5645a0e98ee737b2de032cdc445a9e922d276d20
-			c=c+1
-
-
-
+		print msg.info
+		cells = []
+		i=0
+		tmp=[]
+		rows = msg.info.height
+		cols = msg.info.width
+		for row in range(rows):
+			for col in range (cols):
+				data= msg.data[i]
+				if data == -1 or data == 100:
+					wall = True
+				else:
+					wall = False
+				cell = Cell([row,col],wall)
+				cells.append(cell)
+				i+=1
+			cells.append(tmp)
+		print "done building 2d grid"
+		a = AStar(cells)
+		a.init_world(start,goal,rows,cols)
+		print directions
+		print "kljclkdjflkj"
 
 	
 class Robot(object):
