@@ -4,7 +4,6 @@ import numpy as np
 import copy
 import math
 
-
 grid = []
 columns = 0
 with open('map.txt') as file:
@@ -22,36 +21,11 @@ for line in grid:
 
 print(columns)
 
-grid =[]
-columns =0
-with open('map.txt') as file:
-    reader= csv.reader(file, delimiter= ' ')
-    for line in reader:
-	tmp = []
-	for i in line:
-		
-		if i!="\n" and i!="":
-	    		tmp.append(int(i))
-	grid.append(tmp)
-
-newgrid=[]
-for line in grid:
-
-		
-	columns = len(line)
-	
-print columns
-
-
 repulsive = copy.deepcopy(grid)
 attgrid = copy.deepcopy(grid)
 resultgrid = copy.deepcopy(grid)
 rows = len(grid)
-<<<<<<< HEAD
 
-
-
-        
 
 #
 # grid = newgrid
@@ -164,7 +138,7 @@ while (int(userGoalY) > len(grid[0])):
 userGoal = [userGoalX, userGoalY]
 
 newGrid = []
-
+resultgrid = []
 for r in range(len(getgrid)):
     temp = []
     result = 0.0
@@ -179,6 +153,8 @@ for r in range(len(getgrid)):
         temp2.append(result)
 
     resultgrid.append(temp2)
+    print('printing result grid')
+    print(resultgrid)
     newGrid.append(temp)
 
 # this will output the newGrid to a .txt file
@@ -186,11 +162,13 @@ with open('attractive_result.txt', 'w') as text:
     write = csv.writer(text, delimiter=' ')
     for row in range(0, len(newGrid)):
         write.writerow(newGrid[row])
+    text.close()
 
 with open('combined_result.txt', 'w') as text:
     write = csv.writer(text, delimiter=' ')
-    for row in range(0, len(newGrid)):
+    for row in range(0, len(resultgrid)):
         write.writerow(resultgrid[row])
+    text.close()
 
 gradGrid = []
 
@@ -270,12 +248,6 @@ getgrid = calcAttractive(attgrid, [userGoalX, userGoalY])
 for r in range(rows):
     for c in range(columns):
         if getgrid[r][c] == 100:
-
             print(str((r, c)) + "repulsive direction: obstacle")
         else:
             print(str((r, c)) + "attractive direction: " + str(getgrid[r][c]) + " degrees")
-=======
-            print str((r, c)) + "repulsive direction: obstacle"
-        else:
-            print str((r,c)) + "attractive direction: "+str(getgrid[r][c])+" degrees"
-

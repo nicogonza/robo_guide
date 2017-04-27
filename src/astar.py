@@ -1,4 +1,5 @@
 #! /bin/bash
+
 from Queue import PriorityQueue
 import math
 class World(object):
@@ -48,7 +49,7 @@ class AStar(object):
         self.goal= self.get_cell([goal[0],goal[1]])
 
     def get_cell(self,location):
-        print location[0]
+        print (location[0])
         x= location[0]
         y=location[1]
         return self.cells[x * self.world.rows + y]
@@ -86,7 +87,7 @@ class AStar(object):
         cell = self.goal
         while cell.parent.location is not self.start.location:
             cell = cell.parent
-            print 'path: cell: ', cell.location
+            print ('path: cell: ', cell.location)
     def main(self):
         self.opened.put((0,self.start))
         while len(self.opened.queue)>0:
@@ -94,7 +95,7 @@ class AStar(object):
             self.closed.append(cell)
             if cell.location is self.goal.location:
                 self.save_path()
-                print "done"
+                print ("done")
                 break
             neighbors = self.get_neighbors(cell)
             for neighbor in neighbors:
