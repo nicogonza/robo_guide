@@ -14,9 +14,8 @@ from astar import AStar
 from astar import Cell
 
 def map_callback(msg):
-
 		start = [0,0]
-		goal = [5.0]
+		goal = [0,0]
 		global robot
 		print msg.info
 		cells = []
@@ -24,8 +23,10 @@ def map_callback(msg):
 		tmp=[]
 		rows = msg.info.height
 		cols = msg.info.width
-		for row in range(rows):
-			for col in range (cols):
+		print rows
+		print cols
+		for row in range(0,rows):
+			for col in range (0,cols):
 				data= msg.data[i]
 				if data == -1 or data == 100:
 					wall = True
@@ -34,12 +35,13 @@ def map_callback(msg):
 				cell = Cell([row,col],wall)
 				cells.append(cell)
 				i+=1
-			cells.append(tmp)
 		print "done building 2d grid"
 		a = AStar(cells)
 		a.init_world(start,goal,rows,cols)
+		print len(a.cells)
+		print len(msg.data)
+		directions = a.main()
 		print directions
-		print "kljclkdjflkj"
 
 	
 class Robot(object):
