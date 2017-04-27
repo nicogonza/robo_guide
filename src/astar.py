@@ -1,4 +1,5 @@
 #! /bin/bash
+
 from Queue import PriorityQueue
 from numpy import matrix
 import math
@@ -29,7 +30,7 @@ class AStar(object):
         print "done with world world"
 
     def get_cell(self,location):
-        print location[0]
+        print (location[0])
         x= location[0]
         y=location[1]
         return self.cells[x * self.rows + y]
@@ -79,7 +80,8 @@ class AStar(object):
             value, cell = self.opened.get()
             self.closed.append(cell)
             if cell.location is self.goal.location:
-                return  self.save_path()
+                print "done getting directions"
+		return  self.save_path()
             neighbors = self.get_neighbors(cell)
             for neighbor in neighbors:
                 if neighbor not in self.closed:
