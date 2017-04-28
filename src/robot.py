@@ -9,23 +9,39 @@ from tf.transformations import euler_from_quaternion
 import rospy
 import time
 import math
+import csv
+from astar import AStar
+from astar import Cell
 
 def map_callback(msg):
+		start = [0,0]
+		goal = [0,0]
 		global robot
-
-		f=open('map.txt', 'w')
-		c=0
-		for h in msg.data:
-			if c%704==0 and c !=0:
-				value=str(h)+('\n')
-				f.write(value)
-			else:
-				value=str(h)+' '
-				f.write(value)
-			c=c+1
-
-
-
+		print msg.info
+		cells = []
+		i=0
+		tmp=[]
+		rows = msg.info.height
+		cols = msg.info.width
+		print rows
+		print cols
+		for row in range(0,rows):
+			for col in range (0,cols):
+				data= msg.data[i]
+				if data == -1 or data == 100:
+					wall = True
+				else:
+					wall = False
+				cell = Cell([row,col],wall)
+				cells.append(cell)
+				i+=1
+		print "done building 2d grid"
+		a = AStar(cells)
+		a.init_world(start,goal,rows,cols)
+		print len(a.cells)
+		print len(msg.data)
+		directions = a.main()
+		print directions
 
 	
 class Robot(object):
