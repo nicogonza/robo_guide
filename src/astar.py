@@ -14,7 +14,7 @@ class Cell(object):
 
 class AStar(object):
     def __init__(self,cells):
-        print "initliazing astar"
+        print ("initliazing astar")
         self.opened=PriorityQueue()
         self.closed=[]
         self.cells=cells
@@ -22,12 +22,12 @@ class AStar(object):
         self.cols=0
 
     def init_world(self,start,goal,rows,cols):
-        print "in init world"
+        print ("in init world")
         self.start=self.get_cell([start[0],start[1]])
         self.goal= self.get_cell([goal[0],goal[1]])
         self.rows=rows
         self.cols=cols
-        print "done with world world"
+        print ("done with world world")
 
     def get_cell(self,location):
         print (location[0])
@@ -70,17 +70,17 @@ class AStar(object):
         while cell.parent != None:
             cell = cell.parent
             steps.append(cell.location)
-            print 'path: cell: ', cell.location
+            print ('path: cell: ', cell.location)
         return steps
     def main(self):
-        print "inside main"
+        print ("inside main")
         self.opened.put((0,self.start))
         while len(self.opened.queue)>0:
-            print "in while"
+            print ("in while")
             value, cell = self.opened.get()
             self.closed.append(cell)
             if cell.location is self.goal.location:
-                print "done getting directions"
+                print ("done getting directions")
 		return  self.save_path()
             neighbors = self.get_neighbors(cell)
             for neighbor in neighbors:

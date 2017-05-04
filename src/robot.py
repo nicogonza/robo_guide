@@ -13,18 +13,19 @@ import csv
 from astar import AStar
 from astar import Cell
 
+
 def map_callback(msg):
 		start = [0,0]
 		goal = [0,0]
 		global robot
-		print msg.info
+		print (msg.info)
 		cells = []
 		i=0
 		tmp=[]
 		rows = msg.info.height
 		cols = msg.info.width
-		print rows
-		print cols
+		print (rows)
+		print (cols)
 		for row in range(0,rows):
 			for col in range (0,cols):
 				data= msg.data[i]
@@ -35,13 +36,17 @@ def map_callback(msg):
 				cell = Cell([row,col],wall)
 				cells.append(cell)
 				i+=1
-		print "done building 2d grid"
+		print ("done building 2d grid")
 		a = AStar(cells)
 		a.init_world(start,goal,rows,cols)
-		print len(a.cells)
-		print len(msg.data)
-		directions = a.main()
-		print directions
+		print (len(a.cells))
+		print (len(msg.data))
+
+		directions = []
+		with open('Path.txt', 'r') as text:
+			for line in text:
+				directions.append(list(line))
+		print (directions)
 
 	
 class Robot(object):
@@ -72,18 +77,18 @@ class Robot(object):
 			if flag == 0: 
 					self.orgX = self.curX
 					self.orgY = self.curY
-					print robot.orgX
-					print robot.orgY
+					print (robot.orgX)
+					print (robot.orgY)
 					flag = 1
 
 			for i in range(0, len(points)):
 				current = [self.curX,self.curY]
 				next = [points[i][0],points[i][1]]
 				distance = self.get_distance(current,next)
-				print "current ", current
-				print "next", next
-				print "Distance ",distance
-				print "current orientation: ",self.curAngle	
+				print ("current ", current)
+				print ("next", next)
+				print ("Distance ",distance)
+				print ("current orientation: ",self.curAngle)
 				angle = self.get_angle(next)
 				self.move_turn(angle)
 				self.twist.angular.z = 0
@@ -95,7 +100,7 @@ class Robot(object):
 				self.twist.linear.x = 0
 				self.publisher.publish(self.twist)
 
-				print "finished moving"
+				print ("finished moving")
 
 	def move_turn(self,angle):
 		self.twist.linear.x = 0 
@@ -167,7 +172,7 @@ class Robot(object):
 		angle = math.degrees(angle)
 		if angle < 0:
 			angle = angle + 360
-		print "angel from get angle ; " , angle	
+		print ("angel from get angle ; " , angle)
 		return angle
 
 	def get_distance(self,current,goal):
@@ -199,15 +204,16 @@ def odom_callback(msg):
 
 if __name__ == '__main__':
 	try:
-		print "in main"
+		print ("in main")
 		robot = Robot()
 		flag = 0
-		print "init node"
+		print ("init node")
 		rospy.init_node('bot_node')
-		#rospy.Subscriber('odom',Odometry,odom_callback)
-		print "sub to map"
+		rospy.Subscriber('odom',Odometry,odom_callback)
+		print ("sub to map")
 		rospy.Subscriber("/map", OccupancyGrid, map_callback)
-		print "spin"
+
+		print ("spin")
 		rospy.spin()
 		
 	except rospy.ROSInterruptException:

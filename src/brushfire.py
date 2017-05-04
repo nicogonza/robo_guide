@@ -11,14 +11,17 @@ with open('map.txt') as file:
     for line in reader:
         tmp = []
         for i in line:
+
             if (i != "\n" and i != ""):
                 tmp.append(int(i))
+
         grid.append(tmp)
 
 newgrid = []
 for line in grid:
     columns = len(line)
 
+print(len(grid))
 print(columns)
 
 repulsive = copy.deepcopy(grid)
@@ -103,7 +106,7 @@ def calcRepulsive(grid, obsloc):
                             goalLoc = obs
                             # get degree to a point
                     grid[row][col] = mindist
-                    print(str(row) + " " + str(col) + " " + str(mindist))
+
 
 
                 else:
@@ -153,8 +156,6 @@ for r in range(len(getgrid)):
         temp2.append(result)
 
     resultgrid.append(temp2)
-    print('printing result grid')
-    print(resultgrid)
     newGrid.append(temp)
 
 # this will output the newGrid to a .txt file
@@ -171,6 +172,52 @@ with open('combined_result.txt', 'w') as text:
     text.close()
 
 gradGrid = []
+
+start=[227,225]
+
+
+def getPath(start,goal,grid,stepsize):
+
+    current=start
+    path=[current]
+    row = grid[start[0]]
+    elem = row[start[1]]
+    print('Start Force: '+str(elem))
+    looper=0
+
+    while(current[0]!=goal[0] and current[1]!=goal[1]):
+        surroundings = []
+        for i in range(0,stepsize):
+            point1=[current[0]+i,current[1]]
+            point2 = [current[0] - i, current[1]]
+            point3 = [current[0]  , current[1]+i]
+            point4 = [current[0] , current[1]-i]
+            surroundings.append(point1)
+            surroundings.append(point2)
+            surroundings.append(point3)
+            surroundings.append(point4)
+        min=grid[current[0]][current[1]]
+        for p in surroundings:
+            if(min>grid[p[0]][p[1]] and grid[p[0]][p[1]]!=-1.0):
+                current=p
+                min=grid[p[0]][p[1]]
+        path.append(current)
+        print('Current Force is '+str(grid[current[0]][current[1]]))
+        looper=looper+1
+        if (looper>980):
+            break
+    return path
+road= getPath(start,userGoal,resultgrid)
+
+
+with open('Path.txt', 'w') as text:
+    for row in range(0, len(road)):
+        text.write(str(road[row]))
+        text.write('\n')
+
+    text.close()
+
+
 
 for r in range(0, len(newGrid)):
     temp = []
