@@ -43,10 +43,21 @@ def map_callback(msg):
 		print (len(msg.data))
 
 		directions = []
-		with open('Path.txt', 'r') as text:
-			for line in text:
-				directions.append(list(line))
-		print (directions)
+		line='o'
+		text=open('src/Path.txt', 'r') 
+		while (line!=''):
+			line=text.readline()
+			index=0
+			for x in line:
+				if(x==' '):
+					break
+				index=index+1
+			if(line==''):
+				break
+			point=[int(line[0:index]),int(line[index+1:len(line)-1])]
+			directions.append(point)
+		print directions
+		
 
 	
 class Robot(object):

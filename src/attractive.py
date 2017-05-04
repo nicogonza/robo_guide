@@ -4,7 +4,7 @@ import math
 
 grid=[]
 columns=0
-with open('repulsive_result.txt') as file:
+with open("repulsive_result.txt") as file:
     reader = csv.reader(file, delimiter=' ')
 
     for line in reader:
@@ -119,7 +119,7 @@ with open('Path.txt', 'w') as text:
     #text.write('Start '+str(start)+' goal: '+str(userGoal)+'\n')
     #text.write('Step Size: '+str(i)+'\n')
     for row in range(0, len(road)):
-        text.write(str(road[row])+' '+str(resultgrid[road[row][0]][road[row][1]]))
+        text.write(str(road[row][0])+' '+str(road[row][1]))
         text.write('\n')
 
     text.close()
