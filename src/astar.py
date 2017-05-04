@@ -1,7 +1,7 @@
 #! /bin/bash
 import math
 import csv
-
+import time
 class Cell(object):
     def __init__(self,location,wall=False):
         self.children=[]
@@ -39,6 +39,7 @@ class AStar(object):
         self.cells=cells
         self.rows=0
         self.cols=0
+        self.init = False
 
     def init_world(self,start,goal,rows,cols):
         print "in init world"
@@ -46,6 +47,14 @@ class AStar(object):
         self.cols=cols
         self.start=self.get_cell([start[0],start[1]])
         self.goal= self.get_cell([goal[0],goal[1]])
+
+        if self.start.wall:
+            print "start loc is a wall"
+            return False
+        if self.goal.wall:
+            print "goal loc is a wall"
+            return False
+        self.init= True
 
         print "done with world world"
 
@@ -89,7 +98,6 @@ class AStar(object):
         while cell.parent != None:
             cell = cell.parent
             steps.append(cell.location)
-            print 'path: cell: ', cell.location
         return steps
     def main(self):
         self.opened.push(0,self.start)
@@ -99,6 +107,7 @@ class AStar(object):
             self.closed.append(cell)
             if cell.location == self.goal.location:
                 print "done getting directions"
+                print time.localtime(time.time()), "finished finding path"
                 return  self.save_path()
             neighbors = self.get_neighbors(cell)
             for neighbor in neighbors:
@@ -110,8 +119,8 @@ class AStar(object):
                         else:
                             self.update_cell(neighbor,cell)
                             self.opened.push(neighbor.value,neighbor)
-start = [76, 29]
-goal = [63, 86]
+start = [156, 42]
+goal = [31, 93]
 cells = []
 tmp = []
 # rows = msg.info.height
@@ -137,9 +146,10 @@ rows -=1
 
 print( rows,cols)
 print "done building 2d grid"
+print time.localtime(time.time()), "started finding path"
 a = AStar(cells)
 a.init_world(start, goal, rows, cols)
-
-directions = a.main()
+if a.init:
+    directions = a.main()
 print (directions)
 

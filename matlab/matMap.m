@@ -67,12 +67,10 @@ end
 map = robotics.OccupancyGrid(fff, 20);
 map = robotics.BinaryOccupancyGrid(simpleMap, 2);
 im = imbinarize(fff);
-im = imresize(im,.6);
 im = imcomplement(im);
-im = bwmorph(im,'clean',1);
-
 im = bwmorph(im,'thicken',3);
 %im = bwmorph(im,'close');
+im = bwmorph(im,'clean',1);
 im = imcomplement(im);
 
 imshow(im)
