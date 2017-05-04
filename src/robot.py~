@@ -82,7 +82,7 @@ class Robot(object):
 					print (robot.orgY)
 					flag = 1
 
-			for i in range(1, len(points)):
+			for i in range(0, len(points)):
 				current = [points[0][0],points[0][1]]
 				next = [points[i][0],points[i][1]]
 				distance = self.get_distance(current,next)
