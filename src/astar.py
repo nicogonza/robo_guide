@@ -1,8 +1,7 @@
 #! /bin/bash
-
-from Queue import PriorityQueue
-from numpy import matrix
 import math
+import csv
+
 class Cell(object):
     def __init__(self,location,wall=False):
         self.children=[]
@@ -12,10 +11,30 @@ class Cell(object):
         self.wall=wall
 
 
+class priorityQueue(object):
+    def __init__(self):
+        self.empty = True
+        self.queue=[]
+
+    def push(self,value,cell):
+        self.empty = False;
+        self.queue.append([value,cell])
+        #sort by value
+        self.queue.sort(key=lambda tup: tup[0])
+    def pop(self):
+        if not self.empty:
+            elem =  self.queue.pop(len(self.queue)-1)
+            if len(self.queue)==0:
+                self.empty =True
+            return elem
+        else:
+            return False
+
+
+
 class AStar(object):
     def __init__(self,cells):
-        print "initliazing astar"
-        self.opened=PriorityQueue()
+        self.opened=priorityQueue()
         self.closed=[]
         self.cells=cells
         self.rows=0
@@ -23,18 +42,18 @@ class AStar(object):
 
     def init_world(self,start,goal,rows,cols):
         print "in init world"
-        self.start=self.get_cell([start[0],start[1]])
-        self.goal= self.get_cell([goal[0],goal[1]])
         self.rows=rows
         self.cols=cols
+        self.start=self.get_cell([start[0],start[1]])
+        self.goal= self.get_cell([goal[0],goal[1]])
+
         print "done with world world"
 
     def get_cell(self,location):
-        print (location[0])
         x= location[0]
         y=location[1]
-        return self.cells[x * self.rows + y]
-
+        loc = x * self.cols + y
+        return self.cells[loc]
 
     def get_neighbors(self,cell):
         neighbors = []
@@ -73,64 +92,54 @@ class AStar(object):
             print 'path: cell: ', cell.location
         return steps
     def main(self):
-        print "inside main"
-        self.opened.put((0,self.start))
-        while len(self.opened.queue)>0:
-            print "in while"
-            value, cell = self.opened.get()
+        self.opened.push(0,self.start)
+        self.opened.queue[0]
+        while not self.opened.empty:
+            value, cell = self.opened.pop()
             self.closed.append(cell)
-            if cell.location is self.goal.location:
+            if cell.location == self.goal.location:
                 print "done getting directions"
-		return  self.save_path()
+                return  self.save_path()
             neighbors = self.get_neighbors(cell)
             for neighbor in neighbors:
                 if neighbor not in self.closed:
                     if not neighbor.wall:
-                        if (neighbor.value,neighbor.location) in self.opened.queue:
+                        if (neighbor.value,neighbor) in self.opened.queue:
                             if neighbor.value > cell.value + 10:
                                 self.update_cell(neighbor,cell)
                         else:
                             self.update_cell(neighbor,cell)
-                            self.opened.put((neighbor.value,neighbor))
+                            self.opened.push(neighbor.value,neighbor)
+start = [76, 29]
+goal = [63, 86]
+cells = []
+tmp = []
+# rows = msg.info.height
+cells=[]
+cols = 0
+with open('mod_playground.txt') as file:
+    reader= csv.reader(file,delimiter=' ')
+    rows = 0;
+    for line in reader:
+        if len(line)>cols:
+            cols = len(line)
+        for col in range(len(line)):
+            data = int(line[col])
+            if data == -1 or data == 1:
+                wall = True
+            else:
+                wall = False
+            cell = Cell([rows, col], wall)
+            cells.append(cell)
 
+        rows+=1
+rows -=1
 
-#
-# # grid = [[0, 0, 0, 0, 0, 100],
-# #         [100, 100, 0, 0, 0, 100],
-# #         [0, 0, 0, 100, 0, 0],
-# #         [0, 100, 100, 0, 0, 100],
-# #         [100, 100, 0, 0, 100, 0],
-# #         [0, 0, 0, 0, 0, 0]]
-# # a = AStar(grid,[0,0],[5,0])
-# # a.main()
-# rows = 5
-# cols = 5
-# msg=[0,0,0,100,0,0,0,0,0,0,100,0,100,0,0,0,0,100,100,100,100,100,100,100,0]
-# grid = []
-# tmp = []
-# print len(msg)
-# i = 0
-# cells = []
-# for row in range(rows):
-#     for col in range (cols):
-#         data= msg[i]
-#         tmp.append(data)
-#         if data == -1 or data == 100:
-#             wall = True
-#         else:
-#             wall = False
-#         cell = Cell([row,col],wall)
-#         cells.append(cell)
-#         i+=1
-#     grid.append(tmp)
-#     tmp = []
-# print matrix(grid)
-# a = AStar(cells)
-# a.init_world([0,0],[2,4],5,5)
-# a.main()
+print( rows,cols)
+print "done building 2d grid"
+a = AStar(cells)
+a.init_world(start, goal, rows, cols)
 
-# [[  0   0   0 100   0]
-#  [  0   0   0   0   0]
-#  [100   0 100   0   0]
-#  [  0   0 100 100 100]
-#  [100 100 100 100   0]]
+directions = a.main()
+print (directions)
+

@@ -1,0 +1,11 @@
+
+version: '2'
+
+services:
+
+### Applications Code Container #############################
+
+    applications:
+        image: ros:kinetic-ros-base
+        volumes:
+            - ./:/var/www/Pathway

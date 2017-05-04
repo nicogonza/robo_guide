@@ -14,17 +14,17 @@ from astar import AStar
 from astar import Cell
 
 def map_callback(msg):
-		start = [0,0]
-		goal = [0,0]
+		start = [3,3]
+		goal = [8,6]
 		global robot
 		print msg.info
 		cells = []
 		i=0
 		tmp=[]
-		rows = msg.info.height
-		cols = msg.info.width
-		print rows
-		print cols
+		# rows = msg.info.height
+		rows = 26
+		# cols = msg.info.width
+		cols = 27
 		for row in range(0,rows):
 			for col in range (0,cols):
 				data= msg.data[i]
