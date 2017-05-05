@@ -2,7 +2,7 @@ filePath = fullfile(fileparts(which('PathPlanningExample')),'data','exampleMaps.
 load(filePath)
 
 
-f = imread('playground.pgm');
+f = imread('robot_map.pgm');
 % f = cat(3, f, f, f);
 imshow(f)
 f = double(f);
@@ -69,13 +69,13 @@ map = robotics.BinaryOccupancyGrid(simpleMap, 2);
 im = imbinarize(fff);
 im = imcomplement(im);
 im = bwmorph(im,'thicken',3);
-%im = bwmorph(im,'close');
+im = bwmorph(im,'close');
 im = bwmorph(im,'clean',1);
 im = imcomplement(im);
 
 imshow(im)
 
-dlmwrite('mod_playground.txt',im,'delimiter',' ');
+dlmwrite('robo_map.txt',im,'delimiter',' ');
 
 startLocation = [2 1];
 endLocation = [12 10];

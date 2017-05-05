@@ -14,34 +14,72 @@ from astar import AStar
 from astar import Cell
 
 def map_callback(msg):
-		start = [3,3]
-		goal = [8,6]
-		global robot
-		print msg.info
+		# start = [3,3]
+		# goal = [8,6]
+		# global robot
+		# print msg.info
+		# cells = []
+		# i=0
+		# tmp=[]
+		# # rows = msg.info.height
+		# rows = 26
+		# # cols = msg.info.width
+		# cols = 27
+		# for row in range(0,rows):
+		# 	for col in range (0,cols):
+		# 		data= msg.data[i]
+		# 		if data == -1 or data == 100:
+		# 			wall = True
+		# 		else:
+		# 			wall = False
+		# 		cell = Cell([row,col],wall)
+		# 		cells.append(cell)
+		# 		i+=1
+		# print "done building 2d grid"
+		# a = AStar(cells)
+		# a.init_world(start,goal,rows,cols)
+		# print len(a.cells)
+		# print len(msg.data)
+		# directions = a.main()
+		# print directions
+
+		start = [77, 33]
+		goal = [111, 57]
 		cells = []
-		i=0
-		tmp=[]
+		tmp = []
 		# rows = msg.info.height
-		rows = 26
-		# cols = msg.info.width
-		cols = 27
-		for row in range(0,rows):
-			for col in range (0,cols):
-				data= msg.data[i]
-				if data == -1 or data == 100:
-					wall = True
-				else:
-					wall = False
-				cell = Cell([row,col],wall)
-				cells.append(cell)
-				i+=1
-		print "done building 2d grid"
+		cells = []
+		cols = 0
+		with open('robo_map.txt') as file:
+			reader = csv.reader(file, delimiter=' ')
+			rows = 0;
+			for line in reader:
+				if len(line) > cols:
+					cols = len(line)
+				for col in range(len(line)):
+					data = int(line[col])
+					if data == -1 or data == 1:
+						wall = True
+					else:
+						wall = False
+					cell = Cell([rows, col], wall)
+					cells.append(cell)
+
+				rows += 1
+		rows -= 1
+
+		print(rows, cols)
+		print
+		"done building 2d grid"
+		print
+		time.localtime(time.time()), "started finding path"
 		a = AStar(cells)
-		a.init_world(start,goal,rows,cols)
-		print len(a.cells)
-		print len(msg.data)
-		directions = a.main()
-		print directions
+		a.init_world(start, goal, rows, cols)
+		directions = []
+		if a.init:
+			directions = a.main()
+		print(directions)
+
 
 	
 class Robot(object):

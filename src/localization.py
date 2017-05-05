@@ -34,8 +34,45 @@ def map_callback(msg):
     global height
     global width
 
-    height = msg.height
-    width = msg.width
+    rows = msg.height
+    cols = msg.width
+
+    start = [77, 33]
+    goal = [111, 57]
+    cells = []
+    tmp = []
+    # rows = msg.info.height
+    cells = []
+    cols = 0
+    with open('robo_map.txt') as file:
+        reader = csv.reader(file, delimiter=' ')
+        rows = 0;
+        for line in reader:
+            if len(line) > cols:
+                cols = len(line)
+            for col in range(len(line)):
+                data = int(line[col])
+                if data == -1 or data == 1:
+                    wall = True
+                else:
+                    wall = False
+                cell = Cell([rows, col], wall)
+                cells.append(cell)
+
+            rows += 1
+    rows -= 1
+
+    print(rows, cols)
+    print
+    "done building 2d grid"
+    print
+    time.localtime(time.time()), "started finding path"
+    a = AStar(cells)
+    a.init_world(start, goal, rows, cols)
+    directions = []
+    if a.init:
+        directions = a.main()
+    print(directions)
 
     # print height
 

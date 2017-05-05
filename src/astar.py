@@ -119,37 +119,4 @@ class AStar(object):
                         else:
                             self.update_cell(neighbor,cell)
                             self.opened.push(neighbor.value,neighbor)
-start = [156, 42]
-goal = [31, 93]
-cells = []
-tmp = []
-# rows = msg.info.height
-cells=[]
-cols = 0
-with open('mod_playground.txt') as file:
-    reader= csv.reader(file,delimiter=' ')
-    rows = 0;
-    for line in reader:
-        if len(line)>cols:
-            cols = len(line)
-        for col in range(len(line)):
-            data = int(line[col])
-            if data == -1 or data == 1:
-                wall = True
-            else:
-                wall = False
-            cell = Cell([rows, col], wall)
-            cells.append(cell)
-
-        rows+=1
-rows -=1
-
-print( rows,cols)
-print "done building 2d grid"
-print time.localtime(time.time()), "started finding path"
-a = AStar(cells)
-a.init_world(start, goal, rows, cols)
-if a.init:
-    directions = a.main()
-print (directions)
 
