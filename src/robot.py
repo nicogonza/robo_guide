@@ -21,9 +21,11 @@ from astar import Cell
 
 def init_pose(msg):
     global robot
-    print "initial pose received"
-    odom_callback(msg)
-    robot.start = [robot.curX,robot.curY]
+    print ("initial pose received")
+    angle = quant_to_degrees(msg.pose.pose.orientation)
+    varX = int(round(msg.pose.pose.position.x*20))
+    varY = int(round(msg.pose.pose.position.y*20))
+    robot.start = [varX,varY]
     print robot.curAngle
 
 # def callback_pose(current_pose):
@@ -140,7 +142,7 @@ def tf_callback(t):
 class Robot(object):
 	def __init__(self):
 		self.linear_v = 0.5
-		self.angular_v = 0.4
+		self.angular_v = 0.2
 		self.pi = 3.14
 		self.curX=0
 		self.curY=0
@@ -184,12 +186,17 @@ class Robot(object):
 				print "Distance ",distance
 				print "current orientation: ",self.curAngle
 				print "goal orientation: ", self.goalAngle
-				self.move_turn(self.curAngle - self.goalAngle)
+				angle = self.get_angle(self.goal)
+				if angle>self.curAngle:
+					angle = angle - self.curAngle
+				else:
+					angle = self.curAngle - angle
+				self.move_turn(angle)
 
 				self.twist.angular.z = 0
 				self.publisher.publish(self.twist)
-
-				self.move_distance(.05)
+				self.move_forward(.05/self.linear_v)
+				#self.move_distance(.005)
 
 				self.twist.linear.x = 0
 				self.publisher.publish(self.twist)
@@ -203,14 +210,18 @@ class Robot(object):
 		else:
 			self.twist.angular.z = self.angular_v
 
-		rate = rospy.Rate(100)
-		while  not((int(self.curAngle)< int(angle) and (int(self.curAngle)> int(angle) ))):
+		rate = rospy.Duration(.02)
+		while  (int((self.curAngle)) <= int(abs(angle))):
+			if int(abs(angle))-int((self.curAngle))<10:
+				self.twist.angular.z=.01
+
+			print (int(round((self.curAngle))))
+			print int(round(angle))
 			self.publisher.publish(self.twist)
-			#rate.sleep()
+			rospy.sleep(rate)
 
 		self.twist.angular.z = 0
 		self.publisher.publish(self.twist)
-		rospy.Rate(10).sleep()
 		
 		
 
@@ -263,6 +274,7 @@ class Robot(object):
 		if angle < 0:
 			angle = angle + 360
 		print "angel from get angle ; " , angle
+		return angle
 
 
 
@@ -286,7 +298,7 @@ def quant_to_degrees(msg):
 	if degrees < 0:
 		degrees = degrees + 360
 	return degrees
-def odom_callback(msg):
+def amcl_callback(msg):
 		
 	global robot
 	quaternion = (
@@ -301,6 +313,7 @@ def odom_callback(msg):
 	robot.curAngle = degrees
 	robot.curX = int(round(msg.pose.pose.position.x * 20))
 	robot.curY = int(round(msg.pose.pose.position.y * 20))
+	robot.current = [robot.curX,robot.curY]
 
 if __name__ == '__main__':
 	try:
@@ -318,7 +331,7 @@ if __name__ == '__main__':
 		rospy.Subscriber("/clicked_point", PointStamped, clicked_point)
 		#rospy.Subscriber("/map_metadata", MapMetaData, map_callback)
 
-		rospy.Subscriber('odom',Odometry,odom_callback)
+		rospy.Subscriber('/amcl_pose',PoseWithCovarianceStamped,amcl_callback)
 		print "sub to map"
 		rospy.Subscriber("/map", OccupancyGrid, map_callback)
 		print "spin"
